@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -23,12 +23,17 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
   @override
   void initState() {
     super.initState();
-    _loadBannerAd();
+    // Only load mobile ads when running on native platforms
+    if (!kIsWeb) {
+      _loadBannerAd();
+    }
   }
 
   void _loadBannerAd() {
     final String adUnitId =
-        Platform.isAndroid ? _androidBannerUnitId : _iosBannerUnitId;
+        defaultTargetPlatform == TargetPlatform.android
+            ? _androidBannerUnitId
+            : _iosBannerUnitId;
 
     _bannerAd = BannerAd(
       adUnitId: adUnitId,
@@ -67,6 +72,16 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // 1. WEB PLATFORM: Serve Google AdSense view
+    if (kIsWeb) {
+      return const SizedBox(
+        height: 100,
+        width: double.infinity,
+        child: HtmlElementView(viewType: 'adsense-element'),
+      );
+    }
+
+    // 2. MOBILE PLATFORMS: Serve AdMob view
     if (_hasFailed) {
       return const SizedBox.shrink();
     }

@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart'; // Added for kIsWeb and defaultTargetPlatform
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class InterstitialAdService {
@@ -14,15 +14,20 @@ class InterstitialAdService {
   bool get isReady => _interstitialAd != null;
 
   void loadAd() {
+    // Return early if running on Web to prevent runtime errors
+    if (kIsWeb) return;
+
     if (_interstitialAd != null || _isLoading) {
       return;
     }
 
     _isLoading = true;
 
-    final String adUnitId = Platform.isAndroid
-        ? _androidInterstitialUnitId
-        : _iosInterstitialUnitId;
+    // Use defaultTargetPlatform instead of Platform.isAndroid
+    final String adUnitId =
+        defaultTargetPlatform == TargetPlatform.android
+            ? _androidInterstitialUnitId
+            : _iosInterstitialUnitId;
 
     InterstitialAd.load(
       adUnitId: adUnitId,
@@ -57,7 +62,8 @@ class InterstitialAdService {
   }
 
   void showAd() {
-    if (_interstitialAd == null) {
+    // Return early if running on Web
+    if (kIsWeb || _interstitialAd == null) {
       return;
     }
 
@@ -65,6 +71,7 @@ class InterstitialAdService {
   }
 
   void dispose() {
+    if (kIsWeb) return;
     _interstitialAd?.dispose();
     _interstitialAd = null;
   }
