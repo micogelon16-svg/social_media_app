@@ -1,45 +1,29 @@
-import 'package:flutter/foundation.dart'; // Added to use kIsWeb
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'firebase_options.dart';
-import 'screens/auth_gate.dart';
+import 'screens/object_recognizer_screen.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  // Initialize Mobile Ads ONLY when NOT running on web
-  if (!kIsWeb) {
-    await MobileAds.instance.initialize();
-  }
-
-  runApp(const SocialMediaApp());
+void main() {
+  runApp(const ObjectRecognizerApp());
 }
 
-class SocialMediaApp extends StatelessWidget {
-  const SocialMediaApp({super.key});
+class ObjectRecognizerApp extends StatelessWidget {
+  const ObjectRecognizerApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Social Media App',
+      title: 'Object Recognizer',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
+        primarySwatch: Colors.teal,
         scaffoldBackgroundColor: Colors.grey[50],
-        useMaterial3: false,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.deepPurple,
+            backgroundColor: Colors.teal,
             foregroundColor: Colors.white,
           ),
         ),
       ),
-      home: const AuthGate(),
+      home: const ObjectRecognizerScreen(),
     );
   }
 }
